@@ -6,26 +6,45 @@ VAR
     T_Ronde : TON;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF (Biertjes >= 3) AND NOT SpelGestart THEN
+      <ST><![CDATA[IF  NOT SpelGestart AND koelkast_vol AND aangekomen THEN
     SpelGestart := TRUE;
+	spelstop := FALSE; 
 END_IF
 
-IF SpelGestart AND (Ronde < 10) THEN
+IF SpelGestart = TRUE AND spelstop= FALSE AND (ronde<10) THEN 
     T_Ronde(IN := TRUE, PT := T#4S);
 
     IF T_Ronde.Q THEN
         Ronde := Ronde + 1;
         T_Ronde(IN := FALSE);
     END_IF
+	IF koelkast_leeg= TRUE THEN
+	spelstop:= TRUE; 
+END_IF
+	
+	
 END_IF
 
 IF Ronde >= 10 THEN
     AvondKlaar := TRUE;
-END_IF]]></ST>
+END_IF
+
+
+
+]]></ST>
     </Implementation>
     <LineIds Name="PRG_GameSession">
-      <LineId Id="8" Count="14" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="10" Count="8" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="37" Count="2" />
+      <LineId Id="19" Count="3" />
       <LineId Id="5" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="27" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

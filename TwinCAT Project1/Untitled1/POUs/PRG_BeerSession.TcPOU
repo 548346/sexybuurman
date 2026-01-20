@@ -3,23 +3,91 @@
   <POU Name="PRG_BeerSession" Id="{76912403-e508-47d1-9c5d-44804af3e56e}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_BeerSession
 VAR
-    T_Biertje : TON;
+    T_Biertje_stefan : TON;
+	T_biertje_wiebe: ton; 
+	T_biertje: ton; 
+	koelkast : BOOL;
+ State : T_State := WACHTEN;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF Aangekomen AND NOT AvondKlaar THEN
-    IF Biertjes < 5 THEN
-        T_Biertje(IN := TRUE, PT := T#4S);
+      <ST><![CDATA[
+CASE State OF
 
-        IF T_Biertje.Q THEN
-            Biertjes := Biertjes + 1;
-            T_Biertje(IN := FALSE);
+    // -------------------------
+    WACHTEN:
+    // -------------------------
+        IF Aangekomen AND NOT AvondKlaar THEN
+            IF biertjes > 0 THEN
+                koelkast_vol := TRUE;
+                koelkast_leeg := FALSE;
+                State := DRINKEN;
+            END_IF
         END_IF
-    END_IF
-END_IF]]></ST>
+
+
+    // -------------------------
+    DRINKEN:
+    // -------------------------
+        // Timers alleen actief in deze state
+        T_biertje_stefan(IN := TRUE, PT := T#3S);
+        T_biertje_wiebe (IN := TRUE, PT := T#5S);
+
+        // Stefan drinkt
+        IF T_biertje_stefan.Q AND (biertjes > 0) THEN
+            stefan_bier := stefan_bier + 1;
+            biertjes := biertjes - 1;
+            T_biertje_stefan(IN := FALSE);
+        END_IF
+
+        // Wibe drinkt
+        IF T_biertje_wiebe.Q AND (biertjes > 0) THEN
+            wiebe_bier := wiebe_bier + 1;
+            biertjes := biertjes - 1;
+            T_biertje_wiebe(IN := FALSE);
+        END_IF
+
+        // Overgang naar LEEG
+        IF biertjes = 0 THEN
+            State := LEEG;
+        END_IF
+
+        // Overgang naar KLAAR
+        IF AvondKlaar THEN
+            State := KLAAR;
+        END_IF
+
+
+    // -------------------------
+    LEEG:
+    // -------------------------
+        koelkast_vol := FALSE;
+        koelkast_leeg := TRUE;
+
+        // Timers uit
+        T_biertje_stefan(IN := FALSE);
+        T_biertje_wiebe (IN := FALSE);
+
+        IF AvondKlaar THEN
+            State := KLAAR;
+        END_IF
+
+
+    // -------------------------
+    KLAAR:
+    // -------------------------
+        koelkast_vol := FALSE;
+        koelkast_leeg := TRUE;
+
+        T_biertje_stefan(IN := FALSE);
+        T_biertje_wiebe (IN := FALSE);
+
+END_CASE
+]]></ST>
     </Implementation>
     <LineIds Name="PRG_BeerSession">
-      <LineId Id="8" Count="8" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="153" Count="70" />
+      <LineId Id="47" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

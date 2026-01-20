@@ -8,14 +8,21 @@
     Aangekomen       : BOOL := FALSE;
 
     (* Bier *)
-    Biertjes         : UINT := 0;
+    Biertjes         : UINT := 100;
+	stefan_bier : UINT:= 0;
+	wiebe_bier : UINT:= 0; 
 
     (* Spel *)
     SpelGestart      : BOOL := FALSE;
     Ronde            : UINT := 0;
+	spelstop 		: BOOL:= FALSE; 
 
     (* Avond *)
     AvondKlaar       : BOOL := FALSE;
+	IN: INT;
+	koelkast_leeg : BOOL;  
+	koelkast_vol : bool; 
+	
 END_VAR
 ]]></Declaration>
   </GVL>

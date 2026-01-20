@@ -27,12 +27,15 @@ IF OverstapBereikt AND NOT Aangekomen THEN
 
     IF T_Aankomst.Q THEN
         Aangekomen := TRUE;
+		koelkast_vol:=true; 
         T_Aankomst(IN := FALSE);
     END_IF
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="PRG_TrainTrip">
-      <LineId Id="12" Count="21" />
+      <LineId Id="12" Count="19" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="32" Count="1" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
